@@ -1,0 +1,225 @@
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.KeyEventDispatcher;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+
+import javax.swing.JButton;
+import javax.swing.JPanel;
+
+public class PanelSudoku extends JPanel{
+	private int filas;
+	private int columnas;
+	private int xB=10;
+	private int yB=10;
+	private int valorSeleccionado;
+	private Tablero tablero;
+	
+	
+	public PanelSudoku(){
+		super();
+		this.tablero=new Tablero();
+		this.setPreferredSize(new Dimension(511,600));
+		this.addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				PanelSudoku.this.setValores(e);
+				PanelSudoku.this.setvalorSeleccionado(e); //lamar al metodo
+				//System.out.println(e.getX()+" valor"+e.getY());
+				//System.out.println("Valor seleccionado es: "+PanelSudoku.this.valorSeleccionado);
+				if(e.getX()>10 && e.getX()<460 && e.getY()>10 && e.getY()<460){
+					System.out.println(PanelSudoku.this.tablero.imprimeTablero());
+				}
+				//System.out.println(PanelSudoku.this.filas+" "+PanelSudoku.this.columnas);
+				
+			}
+		});
+		
+		this.addKeyListener(new KeyListener() {
+			
+			@Override
+			public void keyTyped(KeyEvent e) {
+				int chr = (int) e.getKeyChar();
+			
+				//System.out.println(chr);	
+				if (chr>48 && chr<58 || chr == 8){
+					switch (chr){
+					case 49: PanelSudoku.this.valorSeleccionado=1;
+					System.out.println(PanelSudoku.this.valorSeleccionado);
+					break;
+					case 50: PanelSudoku.this.valorSeleccionado=2;
+					System.out.println(PanelSudoku.this.valorSeleccionado);
+					break;
+					case 51:PanelSudoku.this.valorSeleccionado=3;
+					System.out.println(PanelSudoku.this.valorSeleccionado);
+					break;
+					case 52:PanelSudoku.this.valorSeleccionado=4;
+					System.out.println(PanelSudoku.this.valorSeleccionado);
+					break;
+					case 53:PanelSudoku.this.valorSeleccionado=5;
+					System.out.println(PanelSudoku.this.valorSeleccionado);
+					break;
+					case 54:PanelSudoku.this.valorSeleccionado=6;
+					System.out.println(PanelSudoku.this.valorSeleccionado);
+					break;
+					case 55: PanelSudoku.this.valorSeleccionado=7;
+					System.out.println(PanelSudoku.this.valorSeleccionado);
+					break;
+					case 56: PanelSudoku.this.valorSeleccionado=8;
+					System.out.println(PanelSudoku.this.valorSeleccionado);
+					break;
+					case 57: PanelSudoku.this.valorSeleccionado=9;
+					System.out.println(PanelSudoku.this.valorSeleccionado);
+					break;
+					case 8: PanelSudoku.this.valorSeleccionado=0;
+					System.out.println(PanelSudoku.this.valorSeleccionado);
+					break;
+					}
+					
+				}
+				
+				
+				
+				
+				
+						
+				
+			}
+			
+			@Override
+			public void keyReleased(KeyEvent e) {
+				// TODO Auto-generated method stub
+		
+			}
+			
+			
+			@Override
+			public void keyPressed(KeyEvent e) {
+				// TODO Auto-generated method stub
+			}
+		});
+	
+	}
+
+	public void setvalorSeleccionado(MouseEvent e){ //obtener el valor seleccionado de opciones
+		if(e.getY()>510 && e.getY()<560 && e.getX()>10 && e.getX()<460){
+			//System.out.println("Valor: " + (
+			PanelSudoku.this.valorSeleccionado=(((e.getX()-10)/50)+1);
+			
+		}
+	}
+	
+	public void setValores(MouseEvent e){
+		if(e.getX()>10 && e.getX()<460 && e.getY()>10 && e.getY()<460){
+			PanelSudoku.this.filas=(e.getY()-10)/50;
+			PanelSudoku.this.columnas=(e.getX()-10)/50;
+			PanelSudoku.this.tablero.setValor(PanelSudoku.this.filas,PanelSudoku.this.columnas,PanelSudoku.this.valorSeleccionado);
+			this.repaint();
+		}
+	}
+
+	public void paintComponent(Graphics g){
+		super.paintComponent(g);
+		this.pintaCuadricula(g);
+		this.pintaOpciones(g);
+		//this.dibujaError(g);
+		this.pintaEscogidos(g);
+	}
+
+	public void pintaOpciones(Graphics g){
+		g.setFont(new Font("TimesRoman", Font.BOLD, 23));
+		g.setColor(Color.WHITE);
+		g.fillRect(10, 510, 500, 50);
+		int x=0;
+		g.setColor(Color.BLACK);
+		for(int i=0; i<10;i++,x+=50){
+			g.drawRect(this.xB+x,510,50,50);
+			if(i<9){
+				g.drawString(i+1+"",27+x,545);
+			}
+		}
+	}
+
+	public void pintaCuadricula(Graphics g){
+		//super.paintComponent(g);
+		g.setColor(Color.WHITE);
+		g.fillRect(10,10, 450,450);
+		g.fillRect(160,10,150,150);
+		g.fillRect(10,160,150,150);
+		g.fillRect(160,310,150,150);
+		g.fillRect(310,160,150,150);
+		g.setColor(Color.black);
+		g.drawLine(9, 10, 9, 460);
+		g.drawLine(159, 10, 159, 460);
+		g.drawLine(309, 10, 309, 460);
+		g.drawLine(459, 10, 459, 460);
+		g.drawLine(10,9,460,9);
+		g.drawLine(10,159,460,159);
+		g.drawLine(10,309,460,309);
+		g.drawLine(10,459,460,459);int x=0;
+		int y=0;
+		for(int i=0;i<9;i++,x+=50){
+			for(int j=0;j<9;j++,y+=50){
+				g.drawRect(this.xB+x,this.yB+y,50,50);
+			}
+			y = 0;
+		}
+	}
+
+	public void pintaEscogidos(Graphics g){
+		g.setFont(new Font("TimesRoman", Font.BOLD, 23));
+		g.setColor(Color.BLACK);
+		for (int i = 0; i<9; i++){
+			for (int j = 0; j<9; j++){
+				int x=(i*50)+10+35;
+				int y=(j*50)+10+17;
+				if(this.tablero.getMatriz()[i][j].getValor()!=0){
+					g.drawString(this.tablero.getMatriz()[i][j].getValor()+"",y,x);
+				}
+			}
+		}
+		
+		/*int x=(this.columnas*50)+10+17;
+		int y=(this.filas*50)+10+35;
+		g.drawString(this.valorSeleccionado+"", x, y);*/
+		//repaint();
+	}
+	
+	public void pintaError(Graphics g){
+		g.setColor(Color.RED);
+		int x=(this.columnas*50)+11;
+		int y=(this.filas*50)+11;
+		g.fillRect(x, y, 49, 49);
+		//this.repaint();
+	}
+}
